@@ -1,7 +1,8 @@
 // Name: Andrew Blake Berry
 
-// Source used:
+// Sources used:
 // Class provided Java UDP Example
+// https://www.w3schools.com/java/java_files_read.asp
 
 import java.io.*;
 import java.net.*;
