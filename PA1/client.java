@@ -38,9 +38,7 @@ public class client{
             try{						       
                 // Setup to transfer over UDP socket
                 address = InetAddress.getByName(serverName);
-                dSocket = new DatagramSocket();            
-            
-                char[] payload = new char[16]; // define char array to hold text
+                dSocket = new DatagramSocket();
                 
                 byte[] sendBuf = new byte[4];  // declare byte array for sending
                 sendBuf = "1234".getBytes();   // populate byte array

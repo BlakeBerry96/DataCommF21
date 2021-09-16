@@ -1,0 +1,39 @@
+{
+    // Use IntelliSense to learn about possible attributes.
+    // Hover to view descriptions of existing attributes.
+    // For more information, visit: https://go.microsoft.com/fwlink/?linkid=830387
+    "version": "0.2.0",
+    "configurations": [
+
+        {
+            "type": "java",
+            "name": "Launch Current File",
+            "request": "launch",
+            "mainClass": "${file}"
+        },
+        {
+            "type": "java",
+            "name": "PA1 Client",
+            "request": "launch",
+            "mainClass": "client",
+            "projectName": "DataCommF21_5352acd2",
+            "cwd": "${workspaceFolder}/PA1",
+            "args": "localhost 6008 file.txt"
+        },
+        {
+            "type": "java",
+            "name": "PA1 Server",
+            "request": "launch",
+            "mainClass": "server",
+            "projectName": "DataCommF21_5352acd2",
+            "cwd": "${workspaceFolder}/PA1",
+            "args": "6008"
+        }
+    ],
+    "compounds": [
+        {
+          "name": "PA1",
+          "configurations": ["PA1 Server", "PA1 Client"]
+        }
+    ]
+}

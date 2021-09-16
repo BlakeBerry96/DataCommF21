@@ -7,21 +7,14 @@ import java.net.*;
 import java.io.*;
 import java.util.Random;
 import java.nio.ByteBuffer;
-import java.util.Random;
 
 public class server{
       
-    public static void main(String args[]){  
-        
-	// variable for print to screen
-	int verbose = 1;
+    public static void main(String args[]){
 
     // initial port of negotiation. Unfortunately, we have to control this otherwise the failure
     // to close ports by students causes problems.
     int nport = Integer.parseInt(args[0]);
-         
-	// number of packets to receive
-	int numPackets = 5;	 
 		 
     // for the UDP component
     byte[] recBuf = new byte[1024];
