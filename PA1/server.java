@@ -1,8 +1,12 @@
-// Author: Maxwell Young
-// Date: April 5, 2015
+// Name: Andrew Blake Berry
+
+// Source used:
+// Class provided Java UDP Example
 
 import java.net.*;
 import java.io.*;
+import java.util.Random;
+import java.nio.ByteBuffer;
 import java.util.Random;
 
 public class server{
@@ -23,50 +27,54 @@ public class server{
     byte[] recBuf = new byte[1024];
     byte[] sendBuf = new byte[1024];
     DatagramSocket dserverSocket = null;
+    Random rand = new Random();
       
             try{
-               
-               
                 // receive the msg from client using UDP socket
                 String message = "";
                 byte[] buffer = new byte[1024];
                 dserverSocket = new DatagramSocket(nport);
-		
-                if(verbose == 1){ // for testing purposes
-                System.out.println("Waiting for client on port " + dserverSocket.getLocalPort() + "...");
-                }
-    
-			   
-                while(numPackets > 0){  
-                    recBuf = new byte[1024];
-                    DatagramPacket recpacket = new DatagramPacket(recBuf, recBuf.length);
+                
+                recBuf = new byte[1024];
+                DatagramPacket recpacket = new DatagramPacket(recBuf, recBuf.length);
+                dserverSocket.receive(recpacket);
+                buffer = recpacket.getData();
+                
+                // you cannot directly iniatlize to string. You must specify length
+                // in order to avoid junk being printed to file.
+                message = new String(buffer, 0, recpacket.getLength());
+                
+                InetAddress IPAddress = recpacket.getAddress();
+                int port = recpacket.getPort();
+                int newPort = rand.nextInt(64512) + 1024;
+                sendBuf = ByteBuffer.allocate(4).putInt(newPort).array();
+                DatagramPacket sendpacket = new DatagramPacket(sendBuf, sendBuf.length, IPAddress, port);              
+                dserverSocket.send(sendpacket);
+                System.out.println("The random port chosen is " + newPort);
+                dserverSocket.close(); //close socket
+
+                dserverSocket = new DatagramSocket(newPort);
+                String file = "";
+
+                while (ByteBuffer.wrap(buffer).getInt() != 200) {
+                    recpacket = new DatagramPacket(recBuf, recBuf.length);
                     dserverSocket.receive(recpacket);
                     buffer = recpacket.getData();
-                    
-                    // you cannot directly iniatlize to string. You must specify length
-                    // in order to avoid junk being printed to file.
                     message = new String(buffer, 0, recpacket.getLength());
-                      
-                    if(verbose == 1){ // used for testing
-	                    System.out.println("Server received: " + message);                    
-                    }
-                    
-					
-                    InetAddress IPAddress = recpacket.getAddress();
-                    int port = recpacket.getPort();
                     sendBuf = (message.toUpperCase()).getBytes();  // convert payload to uppercase and repack
-                    DatagramPacket sendpacket = new DatagramPacket(sendBuf, sendBuf.length, IPAddress, port);              
+                    sendpacket = new DatagramPacket(sendBuf, sendBuf.length, IPAddress, port);              
                     dserverSocket.send(sendpacket);
-					
-                    if(verbose == 1){ // used for testing
-	                    System.out.println("Server sent back ACK: " + message.toUpperCase());                    
+                    if (ByteBuffer.wrap(buffer).getInt() != 200) {
+                        file += message;
                     }
-					
-					// decrement number of remaining packets to receive
-					numPackets--;
-                } // end while
+                }
                 
                 dserverSocket.close(); //close socket
+
+                BufferedWriter writer = new BufferedWriter(new FileWriter("blah.txt"));
+                writer.write(file);
+                
+                writer.close();
              
         
             }// end try
