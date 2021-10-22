@@ -1,7 +1,6 @@
 // Author: Maxwell Young
 // Date: Feb 1, 2016
 
-
 public class packet implements
 java.io.Serializable
 {
