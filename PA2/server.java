@@ -28,7 +28,6 @@ public class server{
                 recBuf = new byte[1024];
                 int squ = -1;
                 String file = "";
-                InetAddress ip;
                 String log = "";
                 packet lastAck = null;
 
