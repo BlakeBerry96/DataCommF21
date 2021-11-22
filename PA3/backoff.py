@@ -1,5 +1,7 @@
 import math
 import random
+import time
+import threading
 
 random.seed()
 
@@ -7,7 +9,7 @@ def get_latency_date(file_name, window_start, new_window_function):
     with open(file_name, "w") as f:
 
         for num_devices in range(100, 6001, 100):
-            print(num_devices)
+            print(file_name + ': ' + str(num_devices))
             avg_latency = 0
 
             for _ in range(0, 10):
@@ -33,6 +35,8 @@ def get_latency_date(file_name, window_start, new_window_function):
                 avg_latency += latency
 
             f.write(str(int(avg_latency/10)) + '\n')
+            
+    print(file_name + ': Done')
 
 def linear_function(window_size):
     return window_size + 1
@@ -43,6 +47,13 @@ def binary_function(window_size):
 def log_log_function(window_size):
     return int((1 + 1/math.log(math.log(window_size, 2), 2)) * window_size)
 
-get_latency_date('linearLatency.txt', 2, linear_function)
-get_latency_date('binaryLatency.txt', 2,  binary_function)
-get_latency_date('loglogLatency.txt', 4, log_log_function)
+threads = []
+threads.append(threading.Thread(target=get_latency_date, args=('linearLatency.txt', 2, linear_function)))
+threads.append(threading.Thread(target=get_latency_date, args=('binaryLatency.txt', 2,  binary_function)))
+threads.append(threading.Thread(target=get_latency_date, args=('loglogLatency.txt', 4, log_log_function)))
+
+for thread in threads:
+    thread.start()
+
+for thread in threads:
+    thread.join()
